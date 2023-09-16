@@ -1,0 +1,32 @@
+service: aws-lambda-kotlin
+configValidationMode: off
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: java11
+  region: eu-central-1
+  profile: default
+  stage: ${opt:stage, 'dev'}
+  environment: ${self:custom.settings}
+  timeout: 15
+  memorySize: 2048
+  logRetentionInDays: 7
+  lambdaHashingVersion: 20201221
+  role: LambdaIamRole
+
+package:
+  artifact: build/libs/AWS-Lambda-0.0.1-SNAPSHOT.jar
+
+functions:
+  getQuotes:
+    handler: com.serverless.example.StreamLambdaHandler::handleRequest
+    events:
+      - http:
+          path: quotes
+          method: get
+          cors: true
+
+
